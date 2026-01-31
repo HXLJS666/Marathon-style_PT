@@ -1,6 +1,9 @@
 // DOM元素
 const currentTimeElement = document.querySelector('.current-time');
 const pomodoroTimerElement = document.getElementById('pomodoro-timer');
+const startBtn = document.getElementById('start-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const resetBtn = document.getElementById('reset-btn');
 
 // 番茄钟状态
 let pomodoroState = {
@@ -34,27 +37,6 @@ function formatTime(seconds) {
 // 更新番茄钟显示
 function updatePomodoroDisplay() {
     pomodoroTimerElement.textContent = formatTime(pomodoroState.currentTime);
-    
-    // 更新轮数进度
-    updateRoundProgress();
-}
-
-// 更新轮数进度显示
-function updateRoundProgress() {
-    progressContainer.innerHTML = '';
-    
-    for (let i = 1; i <= pomodoroState.rounds; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('progress-dot');
-        
-        if (i < pomodoroState.currentRound) {
-            dot.classList.add('completed');
-        } else if (i === pomodoroState.currentRound) {
-            dot.classList.add('active');
-        }
-        
-        progressContainer.appendChild(dot);
-    }
 }
 
 // 开始番茄钟
@@ -62,8 +44,6 @@ function startPomodoro() {
     if (!pomodoroState.isRunning) {
         pomodoroState.isRunning = true;
         pomodoroState.isPaused = false;
-        startBtn.disabled = true;
-        pauseBtn.disabled = false;
         
         pomodoroState.timerInterval = setInterval(() => {
             pomodoroState.currentTime--;
@@ -81,8 +61,6 @@ function pausePomodoro() {
     if (pomodoroState.isRunning && !pomodoroState.isPaused) {
         pomodoroState.isPaused = true;
         clearInterval(pomodoroState.timerInterval);
-        startBtn.disabled = false;
-        pauseBtn.disabled = true;
     }
 }
 
@@ -94,8 +72,6 @@ function resetPomodoro() {
     pomodoroState.currentTime = pomodoroState.workTime;
     pomodoroState.currentRound = 1;
     pomodoroState.isWorkSession = true;
-    startBtn.disabled = false;
-    pauseBtn.disabled = true;
     updatePomodoroDisplay();
 }
 
@@ -103,8 +79,6 @@ function resetPomodoro() {
 function completeSession() {
     clearInterval(pomodoroState.timerInterval);
     pomodoroState.isRunning = false;
-    startBtn.disabled = false;
-    pauseBtn.disabled = true;
     
     // 切换工作/休息状态
     if (pomodoroState.isWorkSession) {
@@ -159,7 +133,6 @@ function init() {
     startBtn.addEventListener('click', startPomodoro);
     pauseBtn.addEventListener('click', pausePomodoro);
     resetBtn.addEventListener('click', resetPomodoro);
-    saveSettingsBtn.addEventListener('click', saveSettings);
 }
 
 // 启动应用
