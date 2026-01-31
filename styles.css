@@ -1,0 +1,260 @@
+@font-face {
+    font-family: '3270NerdFont';
+    src: url('font/3270NerdFont-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ShortwaveGothic';
+    src: url('font/shortwavegothic-bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --base-color: #000000;
+    --highlight-color: #C2FE0C;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--base-color);
+    color: var(--highlight-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    height: 200px;
+    background-color: var(--highlight-color);
+    color: var(--base-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    gap: 40px;
+}
+
+.logo-image {
+    height: 160px;
+    object-fit: contain;
+    position: relative;
+    /* 以下属性可根据需要调整 */
+    /* top: 10px; */
+    left: -35px;
+    /* margin: 0 10px; */
+    /* padding: 5px; */
+}
+
+.status-indicator {
+    height: 60px;
+    width: 405px;
+    margin-top: 40px;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    background-color: var(--highlight-color);
+    padding-left: 5px;
+}
+
+#Status-Font {
+    font-family: '3270NerdFont', monospace;
+    font-size: 3.5em;
+    font-weight: normal;
+    color: var(--base-color);
+    margin-left: 10px;
+}
+
+.current-time {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    margin-left: 10px;
+    margin-top: -225px;
+}
+
+.timer-display {
+    font-family: 'ShortwaveGothic', Arial, sans-serif;
+    font-size: 35em;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.status-display {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 24px;
+    background-color: var(--base-color);
+    color: var(--highlight-color);
+    border: 2px solid var(--highlight-color);
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--highlight-color);
+    color: var(--base-color);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.settings-section {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.settings {
+    flex: 1;
+    background-color: rgba(194, 254, 12, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--highlight-color);
+}
+
+.settings h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: var(--highlight-color);
+}
+
+.setting-group {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting-group label {
+    font-size: 1.1em;
+}
+
+.setting-group input {
+    padding: 8px 12px;
+    background-color: var(--base-color);
+    color: var(--highlight-color);
+    border: 1px solid var(--highlight-color);
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100px;
+}
+
+#save-settings {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.round-progress {
+    flex: 1;
+    background-color: rgba(194, 254, 12, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--highlight-color);
+}
+
+.round-progress h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: var(--highlight-color);
+}
+
+.progress-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.progress-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--base-color);
+    border: 2px solid var(--highlight-color);
+}
+
+.progress-dot.active {
+    background-color: var(--highlight-color);
+}
+
+.progress-dot.completed {
+    background-color: var(--highlight-color);
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+    }
+    .top-bar h1 {
+        font-size: 2em;
+    }
+    .main-content {
+        padding: 20px;
+    }
+    .timer-display {
+        font-size: 5em;
+    }
+    .settings-section {
+        flex-direction: column;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    .controls .btn {
+        width: 150px;
+    }
+    .setting-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .setting-group input {
+        width: 100%;
+    }
+}

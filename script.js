@@ -1,15 +1,6 @@
 // DOM元素
 const currentTimeElement = document.querySelector('.current-time');
 const pomodoroTimerElement = document.getElementById('pomodoro-timer');
-const pomodoroStatusElement = document.getElementById('pomodoro-status');
-const startBtn = document.getElementById('start-btn');
-const pauseBtn = document.getElementById('pause-btn');
-const resetBtn = document.getElementById('reset-btn');
-const roundsInput = document.getElementById('rounds');
-const workTimeInput = document.getElementById('work-time');
-const breakTimeInput = document.getElementById('break-time');
-const saveSettingsBtn = document.getElementById('save-settings');
-const progressContainer = document.getElementById('progress-container');
 
 // 番茄钟状态
 let pomodoroState = {
@@ -43,12 +34,6 @@ function formatTime(seconds) {
 // 更新番茄钟显示
 function updatePomodoroDisplay() {
     pomodoroTimerElement.textContent = formatTime(pomodoroState.currentTime);
-    
-    if (pomodoroState.isWorkSession) {
-        pomodoroStatusElement.textContent = `工作时间 - 第 ${pomodoroState.currentRound} 轮`;
-    } else {
-        pomodoroStatusElement.textContent = `休息时间 - 第 ${pomodoroState.currentRound - 1} 轮完成`;
-    }
     
     // 更新轮数进度
     updateRoundProgress();
@@ -179,3 +164,39 @@ function init() {
 
 // 启动应用
 init();
+
+// 尝试进入全屏模式
+function enterFullscreen() {
+    const element = document.documentElement;
+    
+    if (element.requestFullscreen) {
+        element.requestFullscreen().catch(err => {
+            console.log('无法进入全屏模式:', err.message);
+        });
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen().catch(err => {
+            console.log('无法进入全屏模式:', err.message);
+        });
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen().catch(err => {
+            console.log('无法进入全屏模式:', err.message);
+        });
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen().catch(err => {
+            console.log('无法进入全屏模式:', err.message);
+        });
+    }
+}
+
+// 页面加载完成后尝试进入全屏
+window.addEventListener('load', function() {
+    // 添加一个短暂延迟，确保页面完全加载
+    setTimeout(enterFullscreen, 500);
+});
+
+// 为用户交互添加全屏请求（现代浏览器要求）
+document.addEventListener('click', function() {
+    if (!document.fullscreenElement) {
+        enterFullscreen();
+    }
+}, { once: true });
