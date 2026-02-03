@@ -141,9 +141,10 @@ function hideSettings() {
 // 显示错误提示
 function showError() {
     errorPopup.classList.add('active');
+    // 使用CSS动画控制显示和消失，不再需要JavaScript定时器
     setTimeout(() => {
         errorPopup.classList.remove('active');
-    }, 3000);
+    }, 1500);
 }
 
 // 保存设置

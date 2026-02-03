@@ -374,9 +374,33 @@ body {
     text-align: center;
     outline: none;
 }
+/* 移除数字输入框的上下箭头 */
+/* 谷歌 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+ /* 火狐 */
+ input[type="number"]{
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
 
 .setting-input input:focus {
     outline: none;
+}
+
+/* 闪烁动画 */
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+        visibility: visible;
+    }
+    50% {
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 /* 错误提示弹窗 */
@@ -394,12 +418,10 @@ body {
     z-index: 1002;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .error-popup.active {
-    opacity: 1;
-    visibility: visible;
+    animation: blink 0.5s steps(1) 3;
 }
 
 .settings-footer {
