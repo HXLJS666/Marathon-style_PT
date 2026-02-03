@@ -34,9 +34,45 @@
         </main>
     </div>
     
-    <!-- 左下角浮动SVG -->
-    <div class="floating-svg">
-        <img src="img/header_logo_desktop.svg" alt="Logo">
+    <!-- 左下角设置按钮 -->
+    <div class="settings-btn">
+        <img src="img/header_logo_desktop.svg" alt="Settings">
+    </div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>SETTINGS</h3>
+                <div class="close-btn">×</div>
+            </div>
+            <div class="settings-body">
+                <div class="setting-item">
+                    <div class="setting-label">TIME</div>
+                    <div class="setting-input">
+                        <input type="number" id="work-time" min="1" max="60" value="25" step="1">
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">REST</div>
+                    <div class="setting-input">
+                        <input type="number" id="break-time" min="1" max="30" value="5" step="1">
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">ROUND</div>
+                    <div class="setting-input">
+                        <input type="number" id="rounds" min="1" max="10" value="4" step="1">
+                    </div>
+                </div>
+                
+                <!-- 错误提示弹窗 -->
+                <div class="error-popup">ERROR INPUT</div>
+            </div>
+            <div class="settings-footer">
+                <button id="save-settings">SAVE</button>
+            </div>
+        </div>
     </div>
     
     <!-- 右下角浮动SVG -->

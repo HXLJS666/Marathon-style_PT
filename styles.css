@@ -249,16 +249,179 @@ body {
     background-color: var(--highlight-color);
 }
 
-.floating-svg {
+.settings-btn {
     position: fixed;
     bottom: 20px;
-    left: 40px;
+    left: 20px;
     z-index: 1000;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-.floating-svg img {
+.settings-btn:hover {
+    transform: scale(1.1);
+}
+
+.settings-btn img {
     width: 60px;
     height: 60px;
+}
+
+/* 设置面板 */
+.settings-panel {
+    position: fixed;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 500px;
+    z-index: 1001;
+    transition: top 0.5s linear, transform 0.5s linear;
+}
+
+.settings-panel.active {
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.settings-content {
+    width: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.settings-header h3 {
+    font-family: '3270NerdFont', monospace;
+    font-size: 2em;
+    color: var(--highlight-color);
+    margin: 0;
+}
+
+.close-btn {
+    font-family: '3270NerdFont', monospace;
+    font-size: 2em;
+    color: var(--highlight-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #ffffff;
+}
+
+.settings-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting-label {
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.5em;
+    color: var(--highlight-color);
+}
+
+.setting-input {
+    position: relative;
+    display: inline-block;
+}
+
+.setting-input:before {
+    content: '[';
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.5em;
+    color: var(--highlight-color);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.setting-input:after {
+    content: ']';
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.5em;
+    color: var(--highlight-color);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.setting-input input {
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.5em;
+    color: var(--highlight-color);
+    background-color: transparent;
+    border: none;
+    padding: 10px 25px;
+    width: 80px;
+    text-align: center;
+    outline: none;
+}
+
+.setting-input input:focus {
+    outline: none;
+}
+
+/* 错误提示弹窗 */
+.error-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.5em;
+    color: var(--highlight-color);
+    background-color: var(--base-color);
+    border: 2px solid var(--highlight-color);
+    padding: 20px 40px;
+    z-index: 1002;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.error-popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.settings-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+#save-settings {
+    font-family: '3270NerdFont', monospace;
+    font-size: 1.2em;
+    color: var(--highlight-color);
+    background-color: transparent;
+    border: 2px solid var(--highlight-color);
+    padding: 15px 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#save-settings:hover {
+    background-color: var(--highlight-color);
+    color: var(--base-color);
 }
 
 .floating-svg-right {
@@ -307,13 +470,38 @@ body {
     .setting-group input {
         width: 100%;
     }
-    .floating-svg {
+    .settings-btn {
         bottom: 10px;
         left: 10px;
     }
-    .floating-svg img {
+    .settings-btn img {
         width: 40px;
         height: 40px;
+    }
+    .settings-panel {
+        width: 95%;
+    }
+    .settings-content {
+        padding: 20px;
+    }
+    .settings-header h3 {
+        font-size: 1.5em;
+    }
+    .setting-label {
+        font-size: 1.2em;
+    }
+    .setting-input:before,
+    .setting-input:after {
+        font-size: 1.2em;
+    }
+    .setting-input input {
+        font-size: 1.2em;
+        padding: 10px 20px;
+        width: 60px;
+    }
+    #save-settings {
+        font-size: 1em;
+        padding: 10px 30px;
     }
     .floating-svg-right {
         bottom: 10px;

@@ -4,6 +4,14 @@ const pomodoroTimerElement = document.getElementById('pomodoro-timer');
 const startBtn = document.getElementById('start-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const resetBtn = document.getElementById('reset-btn');
+const settingsBtn = document.querySelector('.settings-btn');
+const settingsPanel = document.querySelector('.settings-panel');
+const closeBtn = document.querySelector('.close-btn');
+const saveSettingsBtn = document.getElementById('save-settings');
+const workTimeInput = document.getElementById('work-time');
+const breakTimeInput = document.getElementById('break-time');
+const roundsInput = document.getElementById('rounds');
+const errorPopup = document.querySelector('.error-popup');
 
 // 番茄钟状态
 let pomodoroState = {
@@ -41,7 +49,7 @@ function updatePomodoroDisplay() {
 
 // 开始番茄钟
 function startPomodoro() {
-    if (!pomodoroState.isRunning) {
+    if (!pomodoroState.isRunning || pomodoroState.isPaused) {
         pomodoroState.isRunning = true;
         pomodoroState.isPaused = false;
         
@@ -120,6 +128,57 @@ function saveSettings() {
     }
 }
 
+// 显示设置面板
+function showSettings() {
+    settingsPanel.classList.add('active');
+}
+
+// 隐藏设置面板
+function hideSettings() {
+    settingsPanel.classList.remove('active');
+}
+
+// 显示错误提示
+function showError() {
+    errorPopup.classList.add('active');
+    setTimeout(() => {
+        errorPopup.classList.remove('active');
+    }, 3000);
+}
+
+// 保存设置
+function saveSettings() {
+    // 正则检测，确保输入是纯数字
+    const numberRegex = /^\d+$/;
+    
+    if (!numberRegex.test(workTimeInput.value) || !numberRegex.test(breakTimeInput.value) || !numberRegex.test(roundsInput.value)) {
+        showError();
+        return;
+    }
+    
+    const workTime = parseInt(workTimeInput.value);
+    const breakTime = parseInt(breakTimeInput.value);
+    const rounds = parseInt(roundsInput.value);
+    
+    if (workTime >= 1 && workTime <= 60 && breakTime >= 1 && breakTime <= 30 && rounds >= 1 && rounds <= 10) {
+        pomodoroState.workTime = workTime * 60;
+        pomodoroState.breakTime = breakTime * 60;
+        pomodoroState.rounds = rounds;
+        
+        // 如果番茄钟没有运行，重置到新的工作时间
+        if (!pomodoroState.isRunning) {
+            pomodoroState.currentTime = pomodoroState.workTime;
+            pomodoroState.currentRound = 1;
+            pomodoroState.isWorkSession = true;
+            updatePomodoroDisplay();
+        }
+        
+        hideSettings();
+    } else {
+        showError();
+    }
+}
+
 // 初始化
 function init() {
     // 更新当前时间
@@ -133,6 +192,9 @@ function init() {
     startBtn.addEventListener('click', startPomodoro);
     pauseBtn.addEventListener('click', pausePomodoro);
     resetBtn.addEventListener('click', resetPomodoro);
+    settingsBtn.addEventListener('click', showSettings);
+    closeBtn.addEventListener('click', hideSettings);
+    saveSettingsBtn.addEventListener('click', saveSettings);
 }
 
 // 启动应用
