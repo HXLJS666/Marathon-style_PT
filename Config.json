@@ -1,0 +1,11 @@
+{
+  "colors": {
+    "baseColor": "#000000",
+    "highlightColor": "#C2FE0C"
+  },
+  "settings": {
+    "workTime": 25,
+    "breakTime": 5,
+    "rounds": 4
+  }
+}

@@ -12,6 +12,7 @@ const workTimeInput = document.getElementById('work-time');
 const breakTimeInput = document.getElementById('break-time');
 const roundsInput = document.getElementById('rounds');
 const errorPopup = document.querySelector('.error-popup');
+const roundsIndicator = document.querySelector('.rounds-indicator');
 
 // 番茄钟状态
 let pomodoroState = {
@@ -42,9 +43,39 @@ function formatTime(seconds) {
     return `${mins}:${secs}`;
 }
 
+// 生成轮数指示器
+function generateRoundsIndicator() {
+    // 清空现有的轮数指示器
+    roundsIndicator.innerHTML = '';
+    
+    // 根据轮数生成新的轮数指示器，从右到左排列
+    for (let i = pomodoroState.rounds; i >= 1; i--) {
+        const roundElement = document.createElement('div');
+        roundElement.classList.add('round-indicator');
+        
+        // 设置轮数指示器的状态
+        if (i < pomodoroState.currentRound) {
+            roundElement.classList.add('completed');
+        } else if (i === pomodoroState.currentRound) {
+            roundElement.classList.add('current');
+            if (pomodoroState.isRunning) {
+                roundElement.classList.add('running');
+            }
+        }
+        
+        roundsIndicator.appendChild(roundElement);
+    }
+}
+
+// 更新轮数指示器
+function updateRoundsIndicator() {
+    generateRoundsIndicator();
+}
+
 // 更新番茄钟显示
 function updatePomodoroDisplay() {
     pomodoroTimerElement.textContent = formatTime(pomodoroState.currentTime);
+    updateRoundsIndicator();
 }
 
 // 开始番茄钟
@@ -52,6 +83,9 @@ function startPomodoro() {
     if (!pomodoroState.isRunning || pomodoroState.isPaused) {
         pomodoroState.isRunning = true;
         pomodoroState.isPaused = false;
+        
+        // 更新轮数指示器状态
+        updateRoundsIndicator();
         
         pomodoroState.timerInterval = setInterval(() => {
             pomodoroState.currentTime--;
@@ -68,7 +102,10 @@ function startPomodoro() {
 function pausePomodoro() {
     if (pomodoroState.isRunning && !pomodoroState.isPaused) {
         pomodoroState.isPaused = true;
+        pomodoroState.isRunning = false;
         clearInterval(pomodoroState.timerInterval);
+        // 更新轮数指示器状态
+        updateRoundsIndicator();
     }
 }
 
@@ -81,6 +118,8 @@ function resetPomodoro() {
     pomodoroState.currentRound = 1;
     pomodoroState.isWorkSession = true;
     updatePomodoroDisplay();
+    // 更新轮数指示器状态
+    updateRoundsIndicator();
 }
 
 // 完成一个会话（工作或休息）
@@ -108,6 +147,8 @@ function completeSession() {
     }
     
     updatePomodoroDisplay();
+    // 更新轮数指示器状态
+    updateRoundsIndicator();
     alert(pomodoroState.isWorkSession ? '休息结束，开始工作！' : '工作结束，开始休息！');
 }
 
@@ -122,6 +163,8 @@ function saveSettings() {
         pomodoroState.workTime = workTime * 60;
         pomodoroState.breakTime = breakTime * 60;
         resetPomodoro();
+        // 更新轮数指示器状态
+        updateRoundsIndicator();
         alert('设置已保存！');
     } else {
         alert('请输入有效的设置值！');
@@ -148,7 +191,7 @@ function showError() {
 }
 
 // 保存设置
-function saveSettings() {
+async function saveSettings() {
     // 正则检测，确保输入是纯数字
     const numberRegex = /^\d+$/;
     
@@ -172,7 +215,12 @@ function saveSettings() {
             pomodoroState.currentRound = 1;
             pomodoroState.isWorkSession = true;
             updatePomodoroDisplay();
+            // 更新轮数指示器状态
+            updateRoundsIndicator();
         }
+        
+        // 保存配置到Config.json
+        await saveConfig();
         
         hideSettings();
     } else {
@@ -180,14 +228,99 @@ function saveSettings() {
     }
 }
 
+// 从localStorage读取配置
+function loadConfig() {
+    try {
+        const configStr = localStorage.getItem('pomodoroConfig');
+        if (configStr) {
+            const config = JSON.parse(configStr);
+            
+            // 加载颜色配置
+            document.documentElement.style.setProperty('--base-color', config.colors.baseColor);
+            document.documentElement.style.setProperty('--highlight-color', config.colors.highlightColor);
+            
+            // 加载工作时间、休息时间、轮数配置
+            pomodoroState.workTime = config.settings.workTime * 60;
+            pomodoroState.breakTime = config.settings.breakTime * 60;
+            pomodoroState.rounds = config.settings.rounds;
+            pomodoroState.currentTime = pomodoroState.workTime;
+            
+            // 更新输入框的值
+            workTimeInput.value = config.settings.workTime;
+            breakTimeInput.value = config.settings.breakTime;
+            roundsInput.value = config.settings.rounds;
+            
+            console.log('配置加载成功:', config);
+        } else {
+            // 从Config.json读取默认配置
+            fetch('Config.json')
+                .then(response => response.json())
+                .then(config => {
+                    // 加载颜色配置
+                    document.documentElement.style.setProperty('--base-color', config.colors.baseColor);
+                    document.documentElement.style.setProperty('--highlight-color', config.colors.highlightColor);
+                    
+                    // 加载工作时间、休息时间、轮数配置
+                    pomodoroState.workTime = config.settings.workTime * 60;
+                    pomodoroState.breakTime = config.settings.breakTime * 60;
+                    pomodoroState.rounds = config.settings.rounds;
+                    pomodoroState.currentTime = pomodoroState.workTime;
+                    
+                    // 更新输入框的值
+                    workTimeInput.value = config.settings.workTime;
+                    breakTimeInput.value = config.settings.breakTime;
+                    roundsInput.value = config.settings.rounds;
+                    
+                    console.log('从Config.json加载默认配置:', config);
+                })
+                .catch(error => {
+                    console.error('从Config.json加载默认配置失败:', error);
+                    // 使用默认配置
+                    console.log('使用硬编码默认配置');
+                });
+        }
+    } catch (error) {
+        console.error('配置加载失败:', error);
+        // 使用默认配置
+        console.log('使用硬编码默认配置');
+    }
+}
+
+// 保存配置到localStorage
+function saveConfig() {
+    try {
+        const config = {
+            colors: {
+                baseColor: getComputedStyle(document.documentElement).getPropertyValue('--base-color').trim(),
+                highlightColor: getComputedStyle(document.documentElement).getPropertyValue('--highlight-color').trim()
+            },
+            settings: {
+                workTime: parseInt(workTimeInput.value),
+                breakTime: parseInt(breakTimeInput.value),
+                rounds: parseInt(roundsInput.value)
+            }
+        };
+        
+        localStorage.setItem('pomodoroConfig', JSON.stringify(config, null, 2));
+        console.log('配置保存成功:', config);
+    } catch (error) {
+        console.error('配置保存失败:', error);
+    }
+}
+
 // 初始化
 function init() {
+    // 加载配置
+    loadConfig();
+    
     // 更新当前时间
     updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
     
     // 初始化番茄钟
     updatePomodoroDisplay();
+    // 生成轮数指示器
+    generateRoundsIndicator();
     
     // 事件监听器
     startBtn.addEventListener('click', startPomodoro);
@@ -201,6 +334,7 @@ function init() {
 // 启动应用
 init();
 
+/*
 // 尝试进入全屏模式
 function enterFullscreen() {
     const element = document.documentElement;
@@ -236,3 +370,4 @@ document.addEventListener('click', function() {
         enterFullscreen();
     }
 }, { once: true });
+*/

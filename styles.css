@@ -60,15 +60,61 @@ body {
     /* padding: 5px; */
 }
 
+.status-container {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    margin-left: 40px;
+    gap: 10px;
+}
+
 .status-indicator {
     height: 60px;
     width: 405px;
-    margin-top: 40px;
-    margin-left: 40px;
     display: flex;
     align-items: center;
     background-color: var(--highlight-color);
     padding-left: 5px;
+}
+
+/* 轮数指示器 */
+.rounds-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 60px;
+}
+
+.round-indicator {
+    width: 15px;
+    height: 100%;
+    background-color: var(--highlight-color);
+    transition: all 0.3s ease;
+}
+
+.round-indicator.completed {
+    background-color: transparent;
+    border: 2px solid var(--highlight-color);
+}
+
+.round-indicator.current {
+    background-color: var(--highlight-color);
+}
+
+.round-indicator.current.running {
+    background-color: transparent;
+    border: 2px solid var(--highlight-color);
+    animation: roundBlink 1s infinite;
+}
+
+/* 轮数指示器闪烁动画 */
+@keyframes roundBlink {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: var(--highlight-color);
+    }
 }
 
 #Status-Font {
@@ -111,6 +157,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    z-index: 10;
 }
 
 .control-btn {
@@ -450,7 +497,7 @@ input::-webkit-inner-spin-button {
     position: fixed;
     bottom: -318px;
     right: -10px;
-    z-index: 1000;
+    z-index: 5;
     transform: rotate(90deg);
 }
 
