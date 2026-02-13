@@ -21,15 +21,11 @@
 
 ### 主界面
 
-![主界面](img/title.png)
+![主界面](img/main.png)
 
 ### 设置按钮
 
 ![设置按钮](img/header_logo_desktop.svg)
-
-### 装饰元素
-
-![装饰元素](img/cmp-video-strip-left.svg)
 
 ## 使用说明
 
